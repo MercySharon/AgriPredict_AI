@@ -27,15 +27,18 @@ Install dependencies:
 pip install -r requirements.txt
 
 Train models:
-python crop_yield.py
-python market_price.py
+Open Terminal - Ctrl + shift + ~
+then run: python cy.py
+and next: python mp.py
 
-Run the application:
+next Run the application:
 python app.py
 
 
 Open in browser:
 http://127.0.0.1:5000 -- with the link in the terminal after running app.py
+
+Then Open the index.html file and clivk on live server.
 
 
 
