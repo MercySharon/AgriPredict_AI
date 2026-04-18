@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgriPredict AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="showPage('landing')">
+   
+    AgriPredict <span style="color:var(--accent)">AI</span>
+  </a>
+  <div class="nav-pill">Sustainable Agriculture</div>
+</nav>
+
+<!-- ========== LANDING ========== -->
+<div class="page active" id="page-landing">
+  <div class="landing">
+    <div class="hero-badge"><div class="hero-dot"></div> AI-Powered Predictions</div>
+    <h1 class="hero">Smarter Farming<br/>Starts Here</h1>
+    <p class="hero-sub">Predict crop yields and market prices using machine learning — built for Indian farmers and agri-businesses.</p>
+    <div class="card-grid">
+      <div class="hero-card" onclick="showPage('yield')">
+        
+        <div class="card-title">Crop Yield Prediction</div>
+        <div class="card-desc">Estimate harvest output per hectare based on crop, state, season, and real-time weather data.</div>
+        <div class="card-cta">Get yield estimate <span>→</span></div>
+      </div>
+      <div class="hero-card" onclick="showPage('price')">
+        
+        <div class="card-title">Market Price Prediction</div>
+        <div class="card-desc">Forecast mandi prices for major commodities across states and seasons.</div>
+        <div class="card-cta">Check market price <span>→</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== YIELD PAGE ========== -->
+<div class="page" id="page-yield">
+  <div class="form-wrap">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('landing')">← Back to home</button>
+      <div class="steps">
+        <div class="step active" id="ystep1"><div class="step-num">1</div><div class="step-label">Crop Details</div></div>
+        <div class="step-line"></div>
+        <div class="step" id="ystep2"><div class="step-num">2</div><div class="step-label">Yield Result</div></div>
+        <div class="step-line"></div>
+        <div class="step" id="ystep3"><div class="step-num">3</div><div class="step-label">Market Price</div></div>
+      </div>
+      <div class="page-title">Crop Yield Prediction</div>
+      <div class="page-sub">Enter crop details to estimate harvest yield per hectare.</div>
+    </div>
+
+    <div class="form-card" id="yield-form-card">
+      <div class="form-row">
+        <div class="field">
+          <label>Crop</label>
+          <select id="yield-crop"><option value="">Loading...</option></select>
+        </div>
+        <div class="field">
+          <label>State</label>
+          <select id="yield-state"><option value="">Loading...</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Season</label>
+          <select id="yield-season">
+            <option value="Kharif">Kharif (Jun–Oct)</option>
+            <option value="Rabi">Rabi (Nov–Mar)</option>
+            <option value="Summer">Summer (Apr–May)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Area (hectares)</label>
+          <input type="number" id="yield-area" placeholder="e.g. 1000" value="1000" min="1"/>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="predictYield()" id="yield-btn">Predict Yield</button>
+      <div id="yield-error"></div>
+    </div>
+
+    <div id="yield-result" style="display:none"></div>
+    <div id="yield-price-section" style="display:none; margin-top:20px">
+      <button class="btn-secondary" onclick="showPage('price-from-yield')">📈 Predict Market Price for this Yield</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PRICE PAGE ========== -->
+<div class="page" id="page-price">
+  <div class="form-wrap">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('landing')">← Back to home</button>
+      <div class="page-title">Market Price Prediction</div>
+      <div class="page-sub">Forecast commodity prices at mandi based on supply and season.</div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-row">
+        <div class="field">
+          <label>Crop</label>
+          <select id="price-crop"><option value="">Loading...</option></select>
+        </div>
+        <div class="field">
+          <label>State</label>
+          <select id="price-state"><option value="">Loading...</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Season</label>
+          <select id="price-season">
+            <option value="Kharif">Kharif</option>
+            <option value="Rabi">Rabi</option>
+            <option value="Summer">Summer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Quantity (kg)</label>
+          <input type="number" id="price-qty" placeholder="e.g. 5000" value="5000" min="1"/>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="predictPrice(null)" id="price-btn">Predict Market Price</button>
+      <div id="price-error"></div>
+    </div>
+
+    <div id="price-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ========== PRICE FROM YIELD PAGE ========== -->
+<div class="page" id="page-price-from-yield">
+  <div class="form-wrap">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('yield')">← Back to yield</button>
+      <div class="steps">
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Crop Details</div></div>
+        <div class="step-line"></div>
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Yield Result</div></div>
+        <div class="step-line"></div>
+        <div class="step active"><div class="step-num">3</div><div class="step-label">Market Price</div></div>
+      </div>
+      <div class="page-title">Market Price Estimate</div>
+      <div class="page-sub">Using your predicted yield to forecast market price — no additional input needed.</div>
+    </div>
+
+    <div id="yield-summary-card" style="margin-bottom:20px"></div>
+    <div id="price-from-yield-result"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
